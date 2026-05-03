@@ -431,7 +431,7 @@ export default function SessionEdit({ sessionId }: Prop) {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="mx-auto sm:my-10 flex flex-col gap-2 sm:max-w-4xl sm:w-fit">
           <p className="text-2xl font-bold">오늘의 운동을 추가해보세요!</p>
           <p></p>
           <p>
@@ -444,12 +444,12 @@ export default function SessionEdit({ sessionId }: Prop) {
                 if (e.key === "Enter") handleAddWorkout();
               }}
               placeholder="여기에 첫 운동을 입력해보세요."
-              className="h-10 w-full rounded px-2 ring-1 sm:w-auto"
+              className="block h-10 w-full rounded px-2 ring-1 sm:w-sm"
             />
           </p>
           <button
             onClick={() => handleAddWorkout()}
-            className="flex h-10 items-center justify-center rounded border border-green-500 text-lg font-bold text-green-500"
+            className="flex h-10 w-full items-center justify-center rounded border border-green-500 text-lg font-bold text-green-500 sm:w-sm"
           >
             운동추가
           </button>
