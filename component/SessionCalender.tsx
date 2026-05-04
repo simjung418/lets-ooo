@@ -7,6 +7,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon, EllipsisHorizontalCircleIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // 1. 이번 달의 첫날 구하기
 // 2. 이번 달의 마지막 날짜 구하기
@@ -21,6 +22,7 @@ const yearofNow = targetDate.getFullYear();
 const monthofNow = targetDate.getMonth();
 
 export default function SessionCalender() {
+  const router = useRouter();
   const [selectedYear, setSelectedYear] = useState(yearofNow);
   const [selectedMonth, setSelectedMonth] = useState(monthofNow);
   const [selected, setSelected] = useState("");
@@ -72,7 +74,7 @@ export default function SessionCalender() {
   const handleAddSession = (date: string) => {
     const newSession = createEmptySession(date);
     setSessionList((prev: SessionList) => [newSession, ...prev]);
-    setSelected(newSession.id);
+    router.push(`/sessions/${newSession.id}`)
   };
   const handleDeleteSession = (id: string) => {
     if (confirm("정말로 이 세션을 삭제할까요?")) {

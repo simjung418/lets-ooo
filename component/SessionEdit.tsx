@@ -3,15 +3,16 @@
 import { DailySession, SessionList } from "@/lib/types";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { dummy } from "../app/dummy";
-import { TrashIcon, PlusIcon, MinusIcon, PencilSquareIcon, ArrowLeftIcon, CheckIcon } from "@heroicons/react/16/solid";
+import { TrashIcon, PlusIcon, MinusIcon, PencilSquareIcon, ArrowLeftIcon, CheckIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
 import { normalizeNumberInput, getSessionWeight } from "@/app/utils";
+import SessionCompleteSummary from "./SessionCompleteSummary";
 
 type Prop = {
   sessionId: string;
 };
 
-export default function SessionEdit({ sessionId }: Prop) {
+export default function SessionEditForm({ sessionId }: Prop) {
   const router = useRouter();
   const [session, setSession] = useState<DailySession | null>(() => {
     const local = localStorage.getItem(`OooData`);
@@ -21,6 +22,7 @@ export default function SessionEdit({ sessionId }: Prop) {
   });
   const [exerciseName, setExerciseName] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
   const pendingFocusNameRef = useRef<string | null>(null);
   useEffect(() => {
     if (!session) router.push("/");
@@ -59,6 +61,8 @@ export default function SessionEdit({ sessionId }: Prop) {
       return updater(prev);
     });
   };
+
+  //workout handling end
   const handleAddWorkout = () => {
     if (!exerciseName.trim()) return;
     updateSession((prev) => ({
@@ -98,17 +102,21 @@ export default function SessionEdit({ sessionId }: Prop) {
       workout: prev.workout.filter((item) => item.id !== id),
     }));
   };
+  //workout handling end
+
+  //set handling start
   const handleAddSet = (id: string) => {
     updateSession((prev) => ({
       ...prev,
       workout: prev.workout.map((item) => {
         if (item.id !== id) return item;
+        const lastSet = item.sets[item.sets.length - 1];
         return {
           ...item,
           sets: [
             ...item.sets,
             {
-              weight: 0,
+              weight: lastSet?.weight ?? 0,
               reps: 0,
             },
           ],
@@ -134,19 +142,16 @@ export default function SessionEdit({ sessionId }: Prop) {
       }),
     }));
   };
-
   const handleChangeWeightInput = (id: string, idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const value = normalizeNumberInput(Number(e.target.value));
     e.currentTarget.value = String(value);
     handleChangeSet(id, idx, "weight", value);
   };
-
   const handleChangeRepsInput = (id: string, idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const value = normalizeNumberInput(e.target.value === "" ? 0 : Number(e.target.value));
     e.currentTarget.value = value === 0 ? "" : String(value);
     handleChangeSet(id, idx, "reps", value);
   };
-
   const handleDeleteSet = (id: string, idx: number) => {
     updateSession((prev) => ({
       ...prev,
@@ -167,7 +172,6 @@ export default function SessionEdit({ sessionId }: Prop) {
       pendingFocusNameRef.current = null;
     }
   };
-
   const focusNextInput = (
     e: React.KeyboardEvent<HTMLInputElement>,
     workoutId: string,
@@ -197,6 +201,7 @@ export default function SessionEdit({ sessionId }: Prop) {
 
     nextInput?.focus();
   };
+  //set handling end
 
   return (
     <div className="mx-auto w-[calc(100%-16px)]">
@@ -282,8 +287,7 @@ export default function SessionEdit({ sessionId }: Prop) {
                     </th>
                   ))}
                   <th rowSpan={2}>
-                    <p className="hidden sm:block">세트추가</p>
-                    <p className="block sm:hidden">세트</p>
+                    <p className="w-20">세트추가</p>
                   </th>
                   <th rowSpan={2}>총 볼륨</th>
                   <th rowSpan={2}>삭제</th>
@@ -325,7 +329,8 @@ export default function SessionEdit({ sessionId }: Prop) {
                                 <td className="text-center">
                                   <input
                                     type="number"
-                                    inputMode="numeric"
+                                    inputMode="decimal"
+                                    enterKeyHint="next"
                                     name={`${item.id}-sets-${idx}-weight`}
                                     value={set.weight}
                                     onChange={(e) => handleChangeWeightInput(item.id, idx, e)}
@@ -338,6 +343,7 @@ export default function SessionEdit({ sessionId }: Prop) {
                                   <input
                                     type="number"
                                     inputMode="numeric"
+                                    enterKeyHint="next"
                                     name={`${item.id}-sets-${idx}-reps`}
                                     value={set.reps === 0 ? "" : set.reps}
                                     onChange={(e) => handleChangeRepsInput(item.id, idx, e)}
@@ -355,20 +361,33 @@ export default function SessionEdit({ sessionId }: Prop) {
                                   </button>
                                 </td>
                               </>
+                            ) : item.sets.length === idx ? (
+                              <td className="p-0! text-center" colSpan={3}>
+                                <button
+                                  className="flex h-8 w-full cursor-pointer items-center justify-center text-green-500 sm:mx-auto sm:h-full"
+                                  onClick={() => handleAddSet(item.id)}
+                                >
+                                  <PlusIcon className="size-5" />
+                                </button>
+                              </td>
                             ) : (
                               <td colSpan={3}></td>
                             )}
                           </Fragment>
                         );
                       })}
-                      <td className="p-0! text-center">
-                        <button
-                          className="flex aspect-square h-8 cursor-pointer items-center justify-center text-green-500 sm:mx-auto sm:h-full sm:w-full"
-                          onClick={() => handleAddSet(item.id)}
-                        >
-                          <PlusIcon className="size-5" />
-                        </button>
-                      </td>
+                      {item.sets.length === maxSetLength ? (
+                        <td className="p-0! text-center">
+                          <button
+                            className="flex h-8 w-full cursor-pointer items-center justify-center text-green-500 sm:mx-auto sm:h-full"
+                            onClick={() => handleAddSet(item.id)}
+                          >
+                            <PlusIcon className="size-5" />
+                          </button>
+                        </td>
+                      ) : (
+                        <td></td>
+                      )}
                       <td className="p-2">{totalWeight}kg</td>
                       <td className="p-0! text-center">
                         <button
@@ -411,6 +430,7 @@ export default function SessionEdit({ sessionId }: Prop) {
             </table>
           </div>
           <div className="mt-6 flex flex-col gap-2 sm:hidden">
+            <p className="text-right text-sm">오늘 든 무게: {getSessionWeight(session)}kg</p>
             <input
               type="text"
               value={exerciseName}
@@ -428,10 +448,30 @@ export default function SessionEdit({ sessionId }: Prop) {
             >
               운동추가
             </button>
+            {!session.completedAt ? (
+              <button
+                onClick={() => {
+                  updateSession((prev) => ({ ...prev, completedAt: new Date() }));
+                  setIsPopup(true);
+                }}
+                className="flex h-10 w-full items-center justify-center rounded border border-zinc-300 bg-zinc-50 text-lg font-bold text-zinc-500 sm:w-sm"
+              >
+                운동종료
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsPopup(true);
+                }}
+                className="flex h-10 w-full items-center justify-center rounded border border-zinc-300 bg-zinc-50 text-lg font-bold text-zinc-500 sm:w-sm"
+              >
+                운동 결과 보기
+              </button>
+            )}
           </div>
         </div>
       ) : (
-        <div className="mx-auto sm:my-10 flex flex-col gap-2 sm:max-w-4xl sm:w-fit">
+        <div className="mx-auto flex flex-col gap-2 sm:my-10 sm:w-fit sm:max-w-4xl">
           <p className="text-2xl font-bold">오늘의 운동을 추가해보세요!</p>
           <p></p>
           <p>
@@ -453,6 +493,18 @@ export default function SessionEdit({ sessionId }: Prop) {
           >
             운동추가
           </button>
+        </div>
+      )}
+      {isPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white px-5 pt-5 pb-15 shadow-xl">
+            <div className="flex items-center justify-end">
+              <button className="size-10" onClick={() => setIsPopup(false)}>
+                <XMarkIcon className="size-6 font-bold text-zinc-500" />
+              </button>
+            </div>
+            <SessionCompleteSummary session={session} />
+          </div>
         </div>
       )}
     </div>

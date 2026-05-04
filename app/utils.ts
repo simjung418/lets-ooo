@@ -5,10 +5,11 @@ export const createEmptySession = (date: string): DailySession => ({
   date: date,
   exercisePart: "",
   workout: [],
+  createdAt: new Date(),
+  completedAt: null
 });
 
 export const normalizeNumberInput = (value: number) => {
-  console.log("value is", value);
   const number = Number(value);
   if (Number.isNaN(number)) return 0;
   if (number < 0) return 0;

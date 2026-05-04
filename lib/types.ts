@@ -5,6 +5,8 @@ export type DailySession = {
   date: string;
   exercisePart: string;
   workout: Workout[];
+  createdAt?: Date;
+  completedAt?: Date | null;
 };
 
 export type Workout = {

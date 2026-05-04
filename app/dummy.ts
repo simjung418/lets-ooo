@@ -5,6 +5,7 @@ export const dummy: SessionList = [
     id: "4ae6f13a-7875-464b-b571-758443f3c98f",
     date: "2026-04-28",
     exercisePart: "가슴",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "3bfc2d2c-d259-4630-babc-7af8813feb78",
@@ -106,6 +107,7 @@ export const dummy: SessionList = [
     id: "1206ec66-4055-47cf-a2ee-482cbe5d26cb",
     date: "2026-04-27",
     exercisePart: "등",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "db3ec7f4-fd7b-4aa2-bc65-1e46425cea70",
@@ -181,6 +183,7 @@ export const dummy: SessionList = [
     id: "9c9219b1-bf8a-461a-9660-4b2b7f17c96e",
     date: "2026-04-25",
     exercisePart: "하체",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "6c34c358-f078-449c-99d0-c42ecd535536",
@@ -248,6 +251,7 @@ export const dummy: SessionList = [
     id: "50158498-e315-47da-8027-eef016b5e9eb",
     date: "2026-04-24",
     exercisePart: "가슴",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "914a6408-73a2-4667-938c-5e2f2d0b33cf",
@@ -331,6 +335,7 @@ export const dummy: SessionList = [
     id: "f7f7d3ef-7c14-49cf-a1e3-d6a6e3a4b9a1",
     date: "2026-04-23",
     exercisePart: "등",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "2f5c7a2e-3a4b-4c1d-9e8f-0a1b2c3d4e5f",
@@ -418,6 +423,7 @@ export const dummy: SessionList = [
     id: "8d23db70-fae7-4266-ad70-4a55d4fe4797",
     date: "2026-04-22",
     exercisePart: "전신",
+    createdAt: new Date("2026-04-28T00:00:00"),
     workout: [
       {
         id: "06a3d794-1782-4a5f-a18c-9e5e7e780df5",
