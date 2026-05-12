@@ -16,8 +16,8 @@ import { useRouter } from "next/navigation";
 // 5. calendarMap[dateKey] 있으면 운동 정보 표시
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-// const targetDate = new Date(2026, 3, 1); // 2026-04-01
-const targetDate = new Date(); // 금일
+const targetDate = new Date(2026, 3, 1); // 2026-04-01
+// const targetDate = new Date(); // 금일
 const yearofNow = targetDate.getFullYear();
 const monthofNow = targetDate.getMonth();
 
@@ -120,7 +120,7 @@ export default function SessionCalender() {
               return (
                 <dd
                   key={`${week}-${idx}`}
-                  className={clsx("flex h-20 flex-col gap-2 border p-2 sm:h-35", !sessions && "items-center justify-center")}
+                  className={clsx("flex h-20 flex-col gap-2 border p-2 sm:min-h-30", !sessions && "items-center justify-center")}
                 >
                   {sessions ? (
                     <Fragment>

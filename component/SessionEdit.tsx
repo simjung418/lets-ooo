@@ -401,29 +401,62 @@ export default function SessionEditForm({ sessionId }: Prop) {
                   );
                 })}
                 <tr className="hidden sm:table-row">
-                  <td className="px-1">
-                    <label htmlFor="exerciseName" className="w-16 text-right">
-                      운동추가
-                    </label>
+                  <td colSpan={maxSetLength * 3 + 2} className="p-1">
+                    <div className="flex items-center justify-center gap-2">
+                      <label htmlFor="exerciseName" className="w-16 text-right">
+                        운동추가
+                      </label>
+                      <p className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={exerciseName}
+                          name="exerciseName"
+                          onChange={(e) => setExerciseName(e.target.value)}
+                          className="h-7 w-2xs rounded border px-1"
+                          onKeyUp={(e) => {
+                            if (e.key === "Enter") handleAddWorkout();
+                          }}
+                        />
+                        <button
+                          onClick={() => handleAddWorkout()}
+                          className="flex size-6 h-7 w-15 items-center justify-center rounded border text-green-500"
+                        >
+                          <PlusIcon className="size-4" />
+                        </button>
+                      </p>
+                      {!session.completedAt ? (
+                        <button
+                          onClick={() => {
+                            updateSession((prev) => ({ ...prev, completedAt: new Date() }));
+                            setIsPopup(true);
+                          }}
+                          className="flex h-7 cursor-pointer items-center justify-center rounded border border-zinc-300 bg-zinc-50 px-2 text-sm font-bold text-zinc-500"
+                        >
+                          운동종료
+                        </button>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              updateSession((prev) => ({ ...prev, completedAt: null }));
+                            }}
+                            className="flex h-7 cursor-pointer items-center justify-center rounded border border-zinc-300 bg-zinc-50 px-2 text-sm font-bold text-zinc-500"
+                          >
+                            운동 계속하기
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsPopup(true);
+                            }}
+                            className="flex h-7 cursor-pointer items-center justify-center rounded border border-zinc-300 bg-zinc-50 px-2 text-sm font-bold text-zinc-500"
+                          >
+                            운동 결과 보기
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </td>
-                  <td colSpan={maxSetLength * 3 + 1} className="p-1">
-                    <p className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={exerciseName}
-                        name="exerciseName"
-                        onChange={(e) => setExerciseName(e.target.value)}
-                        className="h-8 rounded border px-1 sm:h-7"
-                        onKeyUp={(e) => {
-                          if (e.key === "Enter") handleAddWorkout();
-                        }}
-                      />
-                      <button onClick={() => handleAddWorkout()} className="flex size-6 items-center justify-center rounded border text-green-500">
-                        <PlusIcon className="size-3" />
-                      </button>
-                    </p>
-                  </td>
-                  <td>{getSessionWeight(session)}kg</td>
+                  <td className="p-2">{getSessionWeight(session)}kg</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -459,14 +492,24 @@ export default function SessionEditForm({ sessionId }: Prop) {
                 운동종료
               </button>
             ) : (
-              <button
-                onClick={() => {
-                  setIsPopup(true);
-                }}
-                className="flex h-10 w-full items-center justify-center rounded border border-zinc-300 bg-zinc-50 text-lg font-bold text-zinc-500 sm:w-sm"
-              >
-                운동 결과 보기
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    updateSession((prev) => ({ ...prev, completedAt: null }));
+                  }}
+                  className="flex h-10 w-full flex-1 items-center justify-center rounded border border-zinc-300 bg-zinc-50 text-lg font-bold text-zinc-500 sm:w-sm"
+                >
+                  운동 계속하기
+                </button>
+                <button
+                  onClick={() => {
+                    setIsPopup(true);
+                  }}
+                  className="flex h-10 w-full flex-1 items-center justify-center rounded border border-zinc-300 bg-zinc-50 text-lg font-bold text-zinc-500 sm:w-sm"
+                >
+                  운동 결과 보기
+                </button>
+              </div>
             )}
           </div>
         </div>

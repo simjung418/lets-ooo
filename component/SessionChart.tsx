@@ -12,7 +12,8 @@ export default function SessionChart() {
       .sort((a: { date: string }, b: { date: string }) => b.date.localeCompare(a.date));
   };
   return (
-    <div style={{ width: "100%", height: 500 }} className="flex items-center justify-center">
+    <div style={{ width: "100%", height: 500 }} className="flex flex-col gap-2 items-center justify-center">
+      <h2 className="text-lg font-bold text-zinc-600">현재 운동 추이</h2>
       <AreaChart
         style={{ width: "100%", maxWidth: "700px", maxHeight: "70vh", aspectRatio: 1.618 }}
         responsive
@@ -29,7 +30,7 @@ export default function SessionChart() {
         <XAxis dataKey="date" niceTicks="snap125" />
         <YAxis width="auto" niceTicks="snap125" />
         <Tooltip />
-        <Area type="monotone" dataKey="weight" name="총 볼륨" stroke="#8884d8" fill="#8884d8" />
+        <Area type="monotone" dataKey="weight" name="총 볼륨" unit="kg" stroke="oklch(72.3% 0.219 149.579)" fill="oklch(92.5% 0.084 155.995)" />
         <RechartsDevtools />
       </AreaChart>
     </div>
